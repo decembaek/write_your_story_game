@@ -1,95 +1,86 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Box, Card, Input, Kbd, Text, VStack } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
+import { useForm } from "react-hook-form";
+import { setToLocalStorage } from "@/lib/localStorageFunction";
+import { useRouter } from "next/navigation";
+
+const blink = keyframes`
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+`;
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const router = useRouter();
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data) => {
+    setToLocalStorage("start-name", data.name);
+    setToLocalStorage("start-progress", 0);
+  };
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  const fullText =
+    "안녕하세요, 반갑습니다! 당신의 이야기를 작성해보세요...이름은 무엇인가요?";
+  const [text, setText] = useState("");
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (index < fullText.length) {
+      const timer = setTimeout(() => {
+        if (index === 14) {
+          setText("");
+        }
+        setText((prev) => prev + fullText[index]);
+
+        setIndex((prev) => prev + 1);
+      }, 150); // 각 글자 사이의 지연 시간 (밀리초)
+
+      return () => clearTimeout(timer);
+    }
+  }, [index, fullText]);
+
+  return (
+    <VStack bg="white" w="100vw" h="100vh" justify="center">
+      <Card.Root size={"md"} as="form" onSubmit={handleSubmit(onSubmit)}>
+        <Card.Body bg="white">
+          <Box position="relative">
+            <Text color="black" fontSize="2xl">
+              {text}
+            </Text>
+            {index < fullText.length && (
+              <Box
+                as="span"
+                position="absolute"
+                right="-0.1em"
+                top="0"
+                animation={`${blink} 1s infinite`}
+                fontSize="2xl"
+              >
+                <Text color="black">|</Text>
+              </Box>
+            )}
+          </Box>
+          <Box>
+            {index >= fullText.length && (
+              <>
+                <Input
+                  color={"black"}
+                  placeholder="2 ~ 15자 이름을 입력해주세요"
+                  variant="flushed"
+                  {...register("name", {
+                    required: true,
+                    minLength: 2,
+                    maxLength: 15,
+                  })}
+                />
+                <Kbd onClick={handleSubmit(onSubmit)}>Enter</Kbd>
+              </>
+            )}
+          </Box>
+        </Card.Body>
+      </Card.Root>
+    </VStack>
   );
 }
