@@ -2,11 +2,11 @@ const data = {
   name: "처음 시작할때 하는 방탈출 추리게임",
   prompt:
     "주인공은 방에서 탈출하기 위해 방 안의 아이템들을 활용하여 여러 가지 문제와 수수께끼를 해결해야 합니다. 모든 이야기는 자유롭게 작성할 수 있습니다.",
-  characters: ["주인공", "힌트", "나레이션"],
+  characters: ["주인공", "힌트", "?"],
   scenes: [
     {
       id: 0,
-      character: { name: "나레이션", index: 2 },
+      character: { name: "?", index: 2 },
       text: ["어두운 방에서 정신을 차려본다..."],
       type: "text",
       location: "center",

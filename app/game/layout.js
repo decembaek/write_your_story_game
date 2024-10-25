@@ -1,12 +1,13 @@
 import { Card, VStack } from "@chakra-ui/react";
 
-export default function RootLayout(props) {
+export default function GameLayout(props) {
   const { children } = props;
+
   return (
     <>
-      <VStack bg="white" w="100vw" h="100vh" justify="center">
-        <Card.Root size={"md"}>
-          <Card.Body bg="white">{children}</Card.Body>
+      <VStack justify="center" width={"100%"} p={4}>
+        <Card.Root bg={"white"} w={"100%"} maxW={"1200px"} mx={"auto"}>
+          <Card.Body>{children}</Card.Body>
         </Card.Root>
       </VStack>
     </>

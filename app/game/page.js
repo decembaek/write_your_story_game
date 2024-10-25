@@ -3,17 +3,18 @@
 import { useState, useEffect } from "react";
 import { Box, Input, Kbd, Text } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
+
 import { useForm } from "react-hook-form";
 import { setToLocalStorage } from "@/lib/localStorageFunction";
 import { useRouter } from "next/navigation";
 
-const blink = keyframes`
+export default function Home() {
+  const blink = keyframes`
   0% { opacity: 0; }
   50% { opacity: 1; }
   100% { opacity: 0; }
 `;
 
-export default function Home() {
   const router = useRouter();
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
@@ -44,7 +45,7 @@ export default function Home() {
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-      <Box position="relative">
+      <Box position="relative" display={"inline-block"}>
         <Text color="black" fontSize="2xl">
           {text}
         </Text>
